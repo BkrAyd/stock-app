@@ -14,7 +14,8 @@ import { object, string } from "yup";
 const Login = () => {
   const loginSchema = object({
     password: string()
-      .required()
+      .required("Şifre alanı zorunludur")
+      .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/, "Şifre en az 1 harf ve 1 rakam içermelidir")
       .min(8, "Şifre en az 8 karakter olmalıdır")
       .max(16, "Şifre en fazla 16 karakter olmalıdır"),
     email: string().email("Lütfen geçerli bir e-posta adresi girin").required(),
