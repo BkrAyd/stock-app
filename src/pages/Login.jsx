@@ -9,9 +9,17 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { Formik, Form } from "formik";
+import { object, string } from "yup";
 
 const Login = () => {
-  const loginSchema = {};
+  const loginSchema = object({
+    password: string()
+      .required()
+      .min(8, "Şifre en az 8 karakter olmalıdır")
+      .max(16, "Şifre en fazla 16 karakter olmalıdır"),
+    email: string().email("Lütfen geçerli bir e-posta adresi girin").required(),
+  });
+
   return (
     <Container maxWidth="lg">
       <Grid
@@ -59,9 +67,19 @@ const Login = () => {
               //? routing (stock)
               //? global state güncellemesi
               console.log(values);
+              console.log(actions);
+              actions.resetForm();
+              actions.setSubmitting(false);
             }}
           >
-            {() => (
+            {({
+              isSubmitting,
+              handleChange,
+              values,
+              touched,
+              errors,
+              handleBlur,
+            }) => (
               <Form>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <TextField
@@ -70,6 +88,11 @@ const Login = () => {
                     id="email"
                     type="email"
                     variant="outlined"
+                    onChange={handleChange}
+                    value={values.email}
+                    error={touched.email && !!errors.email}
+                    helperText={touched.email && errors.email}
+                    onBlur={handleBlur}
                   />
                   <TextField
                     label="password"
@@ -77,8 +100,17 @@ const Login = () => {
                     id="password"
                     type="password"
                     variant="outlined"
+                    onChange={handleChange}
+                    value={values.password}
+                    error={touched.password && !!errors.password}
+                    helperText={touched.password && errors.password}
+                    onBlur={handleBlur}
                   />
-                  <Button variant="contained" type="submit">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
                     Submit
                   </Button>
                 </Box>
