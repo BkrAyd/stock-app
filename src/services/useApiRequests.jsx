@@ -2,16 +2,16 @@ import axios from "axios";
 import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify";
 import { useNavigate } from "react-router-dom";
 
-import React from "react";
-
+//? This custom hook is used to make API requests.
 const useApiRequests = () => {
   const navigate = useNavigate();
 
   const login = async (userData) => {
-    
-    const BASE_URL = "https://10001.fullstack.clarusway.com";
     try {
-      const data = await axios.post(`${BASE_URL}/auth/login`, userData);
+      const data = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/auth/login`,
+        userData
+      );
       toastSuccessNotify("Giriş Başarılı!");
       navigate("stock");
       console.log(data);
