@@ -1,28 +1,37 @@
-import Avatar from "@mui/material/Avatar";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import LockIcon from "@mui/icons-material/Lock";
-import image from "../assets/result.svg";
-import { Link } from "react-router-dom";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import { Formik, Form } from "formik";
-import { object, string } from "yup";
-import useApiRequests from "../services/useApiRequests";
+import Avatar from "@mui/material/Avatar"
+import Container from "@mui/material/Container"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import LockIcon from "@mui/icons-material/Lock"
+import image from "../assets/result.svg"
+import { Link } from "react-router-dom"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import { Button } from "@mui/material"
+import { Formik, Form } from "formik"
+import { object, string } from "yup"
+// import { login } from "../services/useApiRequests"
+import useApiRequests from "../services/useApiRequests"
 
 const Login = () => {
-  const { login } = useApiRequests();
+  const { login } = useApiRequests()
+
   const loginSchema = object({
     password: string()
-      .required("Şifre alanı zorunludur")
-      .matches(/\d+/, "Şifre bir sayı içermelidir")
-      
-      .min(8, "Şifre en az 8 karakter olmalıdır")
-      .max(16, "Şifre en fazla 16 karakter olmalıdır"),
-    email: string().email("Lütfen geçerli bir e-posta adresi girin").required(),
-  });
+      .required("Şifre zorunludur")
+      .min(8, "Şifre en az 8 karekter içermelidir")
+      .max(16, "Şifre en fazla 16 karekter içermelidir")
+      .matches(/[a-z]+/, "Şifre en az bir küçük harf içermelidir")
+      .matches(/[A-Z]+/, "Şifre en az bir büyük harf içermelidir")
+      .matches(
+        /[@$!%*?&]+/,
+        "Şifre en az bir özel karakter (@$!%*?&) içermelidir"
+      ),
+
+    email: string()
+      .email("Lütfen geçerli email giriniz")
+      .required("Email zorunludur"),
+  })
 
   return (
     <Container maxWidth="lg">
@@ -65,23 +74,23 @@ const Login = () => {
             initialValues={{ email: "", password: "" }}
             validationSchema={loginSchema}
             onSubmit={(values, actions) => {
-              //? post (login)
-              login(values);
-              //? formu temizle
-              //? mesaj (toast)
-              //? routing (stock)
-              //? global state güncellemesi
-              actions.resetForm();
-              actions.setSubmitting(false);
+              //? POST (login)
+              login(values)
+              //? Formu temizleme
+              //? Mesaj (Toast)
+              //? Routing (stock)
+              //? Global state güncellemesi
+              actions.resetForm()
+              actions.setSubmitting(false) //? isSubmitting (Boolean)
             }}
           >
             {({
               isSubmitting,
               handleChange,
+              handleBlur,
               values,
               touched,
               errors,
-              handleBlur,
             }) => (
               <Form>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -93,9 +102,9 @@ const Login = () => {
                     variant="outlined"
                     onChange={handleChange}
                     value={values.email}
-                    error={touched.email && !!errors.email}
-                    helperText={touched.email && errors.email}
+                    error={touched.email && Boolean(errors.email)}
                     onBlur={handleBlur}
+                    helperText={errors.email}
                   />
                   <TextField
                     label="password"
@@ -104,10 +113,10 @@ const Login = () => {
                     type="password"
                     variant="outlined"
                     onChange={handleChange}
-                    value={values.password}
-                    error={touched.password && !!errors.password}
-                    helperText={touched.password && errors.password}
                     onBlur={handleBlur}
+                    value={values.password}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={errors.password}
                   />
                   <Button
                     variant="contained"
@@ -133,7 +142,7 @@ const Login = () => {
         </Grid>
       </Grid>
     </Container>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
