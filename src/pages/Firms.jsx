@@ -2,8 +2,8 @@ import React from 'react'
 
 const Firms = () => {
   return (
-    <div>s</div>
+    <div>Firms</div>
   )
 }
 
-export default s
+export default Firms
