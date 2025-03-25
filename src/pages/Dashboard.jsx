@@ -1,44 +1,41 @@
-
-
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { useSelector } from "react-redux";
-import useApiRequests from "../services/useApiRequests";
-import MenuListItems from "../components/MenuListItems";
-import { Outlet } from "react-router-dom";
-
-const drawerWidth = 240;
+import * as React from "react"
+import AppBar from "@mui/material/AppBar"
+import Box from "@mui/material/Box"
+import CssBaseline from "@mui/material/CssBaseline"
+import Divider from "@mui/material/Divider"
+import Drawer from "@mui/material/Drawer"
+import IconButton from "@mui/material/IconButton"
+import MenuIcon from "@mui/icons-material/Menu"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import { useSelector } from "react-redux"
+import useApiRequests from "../services/useApiRequests"
+import MenuListItems from "../components/MenuListItems"
+import { Outlet } from "react-router-dom"
+const drawerWidth = 200
 
 function ResponsiveDrawer(props) {
-  const { username } = useSelector((state) => state.auth);
-  const { logout } = useApiRequests();
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  const { username } = useSelector((state) => state.auth)
+  const { logout } = useApiRequests()
+  const { window } = props
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [isClosing, setIsClosing] = React.useState(false)
 
   const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
+    setIsClosing(true)
+    setMobileOpen(false)
+  }
 
   const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
+    setIsClosing(false)
+  }
 
   const handleDrawerToggle = () => {
     if (!isClosing) {
-      setMobileOpen(!mobileOpen);
+      setMobileOpen(!mobileOpen)
     }
-  };
+  }
 
   const drawer = (
     <div>
@@ -46,11 +43,11 @@ function ResponsiveDrawer(props) {
       <Divider />
       <MenuListItems />
     </div>
-  );
+  )
 
   // Remove this const when copying and pasting into your project.
   const container =
-    window !== undefined ? () => window().document.body : undefined;
+    window !== undefined ? () => window().document.body : undefined
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -72,16 +69,14 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              STOCK APP
-            </Typography>
-            {username && (
-              <Button color="inherit" onClick={logout}>
-                Logout
-              </Button>
-            )}
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            STOCK APP
           </Typography>
+          {username && (
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <Box
@@ -96,17 +91,20 @@ function ResponsiveDrawer(props) {
           open={mobileOpen}
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
           sx={{
             display: { xs: "block", sm: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: "secondary.main",
+              color: "white",
             },
-          }}
-          slotProps={{
-            root: {
-              keepMounted: true, // Better open performance on mobile.
-            },
+            // "& .MuiSvgIcon-root": {
+            //   color: "white",
+            // },
           }}
         >
           {drawer}
@@ -118,7 +116,12 @@ function ResponsiveDrawer(props) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: "secondary.main",
+              color: "white",
             },
+            // "& .MuiSvgIcon-root": {
+            //   color: "white",
+            // },
           }}
           open
         >
@@ -134,11 +137,10 @@ function ResponsiveDrawer(props) {
         }}
       >
         <Toolbar />
-       
         <Outlet />
       </Box>
     </Box>
-  );
+  )
 }
 
-export default ResponsiveDrawer;
+export default ResponsiveDrawer

@@ -1,8 +1,58 @@
-import React from 'react'
+import { useEffect, useState } from "react"
+import useStockRequests from "../services/useStockRequests"
+import PurchaseModal from "../components/PurchaseModal"
+import PurchaseTable from "../components/PurchaseTable"
+import { Button, Container } from "@mui/material"
+import { TableSkelthon, NoDataMessage } from "../components/Messages"
+import { useSelector } from "react-redux"
 
 const Purchases = () => {
+  const { getStock } = useStockRequests()
+  const { loading, purchases } = useSelector((state) => state.stock)
+
+  const [open, setOpen] = useState(false)
+
+  const initialState = {
+    brandId: "",
+    firmId: "",
+    productId: "",
+    quantity: "",
+    price: "",
+  }
+  const [data, setData] = useState(initialState)
+
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => {
+    setOpen(false)
+    setData(initialState)
+  }
+
+  useEffect(() => {
+    getStock("products")
+    getStock("purchases")
+    getStock("brands")
+    getStock("firms")
+  }, []) // eslint-disable-line
+
   return (
-    <div>Purchases</div>
+    <Container maxWidth="xl">
+      <Button variant="contained" onClick={handleOpen} sx={{ mb: 2 }}>
+        New Purchase
+      </Button>
+
+      {loading && <TableSkelthon />}
+      {!loading && !purchases?.length && <NoDataMessage />}
+      {!loading && purchases?.length > 0 && (
+        <PurchaseTable setData={setData} handleOpen={handleOpen} />
+      )}
+
+      <PurchaseModal
+        open={open}
+        handleClose={handleClose}
+        data={data}
+        setData={setData}
+      />
+    </Container>
   )
 }
 
